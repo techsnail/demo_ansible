@@ -1,0 +1,33 @@
+- name: 上传软件包
+  copy: src={{agent_package}} dest=/tmp/
+
+- name: 安装软件包
+  shell: yum localinstall -y /tmp/{{agent_package}}
+  args:
+    warn: no
+
+- name: 上传主配置文件
+  copy: src=zabbix_agentd.conf dest=/etc/zabbix/
+
+- name: 配置Hostname
+  replace:
+    path: /etc/zabbix/zabbix_agentd.conf
+    regexp: '^Hostname=.*'
+    replace: 'Hostname={{prefix}}{{inventory_hostname}}'
+
+- name: 上传辅助配置文件
+  copy: src={{item}} dest=/etc/zabbix/zabbix_agentd.d/ owner=root group=root mode=0644
+  with_items:
+    - zabbix_agentd.d/userparameter_diskstats.conf
+    - zabbix_agentd.d/userparameter_tcpport.conf
+    - zabbix_agentd.d/userparameter_tcp_status.conf
+
+- name: 创建脚本存放目录
+  file: path=/etc/zabbix/scripts/ state=directory owner=root group=root mode=0755
+
+- name: 上传辅助脚本
+  copy: src={{item}} dest=/etc/zabbix/scripts/ owner=root group=root mode=0755
+  with_items:
+    - scripts/disc_port.sh
+    - scripts/lld-disks.py
+    - scripts/tcp_status.py

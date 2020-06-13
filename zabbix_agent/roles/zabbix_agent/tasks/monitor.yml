@@ -1,0 +1,10 @@
+- name: 生成python脚本
+  local_action: template src=create_host.py dest=/tmp/create_host_{{inventory_hostname}}.py mode=0750
+
+- name: 执行python脚本
+  local_action: shell python /tmp/create_host_{{inventory_hostname}}.py
+
+- name: 清理临时文件
+  local_action: file path={{item}} state=absent
+  with_items:
+    - /tmp/create_host_{{inventory_hostname}}.py

@@ -1,0 +1,23 @@
+################# ZABBIX AGENT ##################
+# zabbix agent所使用的软件包
+agent_package: zabbix-agent-x.x.x-x.el7.x86_64.rpm
+
+# zabbix agent(和frontend中)配置的Hostname的前缀。完整名称为prefix + host_ip，示例：Linux_192.168.1.253。
+prefix: Linux_
+
+################# ZABBIX FRONTEND #################
+# 是否在zabbix frontend中添加该主机的监控。可选值：true、false
+add_monitor: true
+
+# zabbix api的地址
+zabbix_api_url: http://x.x.x.x/zabbix/api_jsonrpc.php
+
+# zabbix frontend的登录账号，需要有添加主机的权限
+zabbix_user: Admin
+zabbix_password: example_password
+
+# 主机所属的主机组
+hostgroup: Linux servers
+
+# 要关联的模板名称(值为python list)
+templates: ['TcpPortDiscover', 'Template Disk Performance', 'Template OS Linux']

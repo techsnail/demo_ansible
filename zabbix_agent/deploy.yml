@@ -1,0 +1,7 @@
+- name: 系统初始化
+  hosts: Linux_servers
+  remote_user: root
+  gather_facts: true
+
+  roles:
+    - zabbix_agent

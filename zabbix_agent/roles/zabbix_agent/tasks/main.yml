@@ -1,0 +1,14 @@
+- name: 检测zabbix agent
+  stat: path=/usr/sbin/zabbix_agentd
+  register: agent_binary
+
+- name: 安装zabbix agent
+  include_tasks: install.yml
+  when: agent_binary.stat.exists == false
+
+- name: 设置开机启动并启动zabbix agent
+  service: name=zabbix-agent state=started enabled=yes
+
+- name: 设置zabbix agent监控
+  include_tasks: monitor.yml
+  when: add_monitor
